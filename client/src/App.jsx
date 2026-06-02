@@ -82,6 +82,14 @@ const handleToggleTask = async (id) => {
   }
 };
 
+const isOverdue = (date) => {
+  return (
+    !isNaN(new Date(date)) &&
+    new Date(date) < new Date() &&
+    !date.completed
+  );
+};
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-5xl mx-auto px-6 py-10">
@@ -209,7 +217,12 @@ const handleToggleTask = async (id) => {
 
             <button
   onClick={handleAddTask}
-  className="bg-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700 transition"
+  disabled={!title.trim()}
+  className={`px-6 py-3 rounded-xl font-medium transition ${
+    !title.trim()
+      ? "bg-slate-300 text-slate-500 cursor-not-allowed"
+      : "bg-blue-600 text-white hover:bg-blue-700"
+  }`}
 >
   Add Task
 </button>
@@ -241,9 +254,9 @@ const handleToggleTask = async (id) => {
   })
   .map((task) => (
     <div
-      key={task.id}
-      className="bg-white rounded-2xl p-6 shadow-sm"
-    >
+  key={task.id}
+  className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-200"
+>
       <div className="flex justify-between items-start">
         <div>
           <h3 className="text-lg font-semibold">
@@ -255,8 +268,15 @@ const handleToggleTask = async (id) => {
           </p>
 
           <p className="text-sm text-slate-400 mt-3">
-            Due: {task.dueDate}
-          </p>
+  Due: {new Date(task.dueDate).toLocaleDateString()}
+</p>
+
+{new Date(task.dueDate) < new Date() &&
+ !task.completed && (
+  <span className="inline-block mt-2 px-2 py-1 text-xs rounded-lg bg-red-100 text-red-700">
+    Overdue
+  </span>
+)}
         </div>
 
        <div className="flex gap-2">
