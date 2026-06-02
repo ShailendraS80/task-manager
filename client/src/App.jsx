@@ -8,7 +8,7 @@ function App() {
   const [filter, setFilter] = useState("all");
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/tasks")
+    fetch("https://task-manager-production-8d36.up.railway.app/api/tasks")
       .then((res) => res.json())
       .then((data) => setTasks(data))
       .catch((err) => console.error(err));
