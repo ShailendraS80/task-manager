@@ -1,0 +1,26 @@
+[
+  {
+    "id": "b606c54a-eb5d-4f6d-965b-e6cd5266dc9b",
+    "title": "Learn React",
+    "description": "Hooks Practice",
+    "dueDate": "2026-06-15",
+    "completed": true,
+    "createdAt": "2026-06-02T16:47:42.495Z"
+  },
+  {
+    "id": "ed75a6e5-d2ee-456d-99be-5d49733ff8be",
+    "title": "Task 2",
+    "description": "Checking",
+    "dueDate": "2026-06-06",
+    "completed": false,
+    "createdAt": "2026-06-02T17:34:06.403Z"
+  },
+  {
+    "id": "e69e173a-7c09-4523-83ad-0d66b51bcc9c",
+    "title": "Past",
+    "description": "Testting",
+    "dueDate": "2025-01-01",
+    "completed": false,
+    "createdAt": "2026-06-02T18:25:15.157Z"
+  }
+]
