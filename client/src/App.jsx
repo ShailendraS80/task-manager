@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 function App() {
   const [tasks, setTasks] = useState([]);
+const [title, setTitle] = useState("");
+const [description, setDescription] = useState("");
+const [dueDate, setDueDate] = useState("");
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/api/tasks")
@@ -8,6 +11,54 @@ function App() {
       .then((data) => setTasks(data))
       .catch((err) => console.error(err));
   }, []);
+
+  const handleAddTask = async () => {
+  if (!title.trim()) return;
+
+  try {
+    const response = await fetch(
+      "http://127.0.0.1:5000/api/tasks",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          dueDate,
+        }),
+      }
+
+      
+    );
+
+    const newTask = await response.json();
+
+    setTasks([...tasks, newTask]);
+
+    setTitle("");
+    setDescription("");
+    setDueDate("");
+  } catch (error) {
+    console.error(error);
+  }
+}; 
+const handleDeleteTask = async (id) => {
+  try {
+    await fetch(
+      `http://127.0.0.1:5000/api/tasks/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    setTasks(tasks.filter((task) => task.id !== id));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-5xl mx-auto px-6 py-10">
@@ -88,26 +139,33 @@ function App() {
 
           <div className="space-y-4">
             <input
-              type="text"
-              placeholder="Task title"
-              className="w-full border border-slate-200 rounded-xl p-3"
-            />
+  type="text"
+  placeholder="Task title"
+  value={title}
+  onChange={(e) => setTitle(e.target.value)}
+  className="w-full border border-slate-200 rounded-xl p-3"
+/>
 
             <textarea
-              placeholder="Description"
-              className="w-full border border-slate-200 rounded-xl p-3"
-            />
+  placeholder="Description"
+  value={description}
+  onChange={(e) => setDescription(e.target.value)}
+  className="w-full border border-slate-200 rounded-xl p-3"
+/>
 
             <input
-              type="date"
-              className="w-full border border-slate-200 rounded-xl p-3"
-            />
+  type="date"
+  value={dueDate}
+  onChange={(e) => setDueDate(e.target.value)}
+  className="w-full border border-slate-200 rounded-xl p-3"
+/>
 
             <button
-              className="bg-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700 transition"
-            >
-              Add Task
-            </button>
+  onClick={handleAddTask}
+  className="bg-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700 transition"
+>
+  Add Task
+</button>
           </div>
         </div>
         <div className="mt-8">
@@ -137,9 +195,20 @@ function App() {
           </p>
         </div>
 
-        <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-sm">
-          Active
-        </span>
+        <div className="flex gap-2">
+
+  <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-sm">
+    Active
+  </span>
+
+  <button
+    onClick={() => handleDeleteTask(task.id)}
+    className="px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm hover:bg-red-200"
+  >
+    Delete
+  </button>
+
+</div>
       </div>
     </div>
   ))}
