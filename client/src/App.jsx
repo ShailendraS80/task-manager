@@ -5,6 +5,7 @@ function App() {
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/api/tasks")
@@ -141,17 +142,39 @@ const handleToggleTask = async (id) => {
 />
 
   <div className="flex gap-3">
-    <button className="px-4 py-2 rounded-xl bg-blue-600 text-white">
-      All
-    </button>
+    <button
+  onClick={() => setFilter("all")}
+  className={`px-4 py-2 rounded-xl ${
+    filter === "all"
+      ? "bg-blue-600 text-white"
+      : "bg-slate-100"
+  }`}
+>
+  All
+</button>
 
-    <button className="px-4 py-2 rounded-xl bg-slate-100">
-      Active
-    </button>
+    <button
+  onClick={() => setFilter("active")}
+  className={`px-4 py-2 rounded-xl ${
+    filter === "active"
+      ? "bg-blue-600 text-white"
+      : "bg-slate-100"
+  }`}
+>
+  Active
+</button>
 
-    <button className="px-4 py-2 rounded-xl bg-slate-100">
-      Completed
-    </button>
+    <button
+  onClick={() => setFilter("completed")}
+  className={`px-4 py-2 rounded-xl ${
+    filter === "completed"
+      ? "bg-blue-600 text-white"
+      : "bg-slate-100"
+  }`}
+>
+  Completed
+</button>
+
   </div>
 
 </div>
@@ -205,6 +228,17 @@ const handleToggleTask = async (id) => {
       .toLowerCase()
       .includes(search.toLowerCase())
   )
+  .filter((task) => {
+    if (filter === "active") {
+      return !task.completed;
+    }
+
+    if (filter === "completed") {
+      return task.completed;
+    }
+
+    return true;
+  })
   .map((task) => (
     <div
       key={task.id}
