@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 function App() {
   const [tasks, setTasks] = useState([]);
-const [title, setTitle] = useState("");
-const [description, setDescription] = useState("");
-const [dueDate, setDueDate] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/api/tasks")
@@ -132,10 +133,12 @@ const handleToggleTask = async (id) => {
         <div className="bg-white rounded-2xl p-6 shadow-sm mb-8">
 
   <input
-    type="text"
-    placeholder="🔍 Search tasks..."
-    className="w-full border border-slate-200 rounded-xl p-3 mb-4"
-  />
+  type="text"
+  placeholder="🔍 Search tasks..."
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  className="w-full border border-slate-200 rounded-xl p-3 mb-4"
+/>
 
   <div className="flex gap-3">
     <button className="px-4 py-2 rounded-xl bg-blue-600 text-white">
@@ -196,7 +199,13 @@ const handleToggleTask = async (id) => {
   </h2>
 
   <div className="space-y-4">
-  {tasks.map((task) => (
+  {tasks
+  .filter((task) =>
+    task.title
+      .toLowerCase()
+      .includes(search.toLowerCase())
+  )
+  .map((task) => (
     <div
       key={task.id}
       className="bg-white rounded-2xl p-6 shadow-sm"
