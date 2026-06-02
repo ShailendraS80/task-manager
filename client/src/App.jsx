@@ -59,6 +59,27 @@ const handleDeleteTask = async (id) => {
   }
 };
 
+const handleToggleTask = async (id) => {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:5000/api/tasks/${id}/toggle`,
+      {
+        method: "PATCH",
+      }
+    );
+
+    const updatedTask = await response.json();
+
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? updatedTask : task
+      )
+    );
+  } catch (error) {
+    console.error(error);
+  }
+};
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-5xl mx-auto px-6 py-10">
@@ -195,11 +216,24 @@ const handleDeleteTask = async (id) => {
           </p>
         </div>
 
-        <div className="flex gap-2">
+       <div className="flex gap-2">
 
-  <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-sm">
-    Active
+  <span
+    className={`px-3 py-1 rounded-full text-sm ${
+      task.completed
+        ? "bg-green-100 text-green-700"
+        : "bg-yellow-100 text-yellow-700"
+    }`}
+  >
+    {task.completed ? "Completed" : "Active"}
   </span>
+
+  <button
+    onClick={() => handleToggleTask(task.id)}
+    className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm hover:bg-green-200"
+  >
+    {task.completed ? "Undo" : "Complete"}
+  </button>
 
   <button
     onClick={() => handleDeleteTask(task.id)}
